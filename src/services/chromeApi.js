@@ -5,7 +5,7 @@ import {
   saveSegments,
   saveTabsToSegment,
   tabUrl
-} from "../utils.js";
+} from "../../utils.js";
 
 export async function getCurrentWindowTabs() {
   const rawTabs = await chrome.tabs.query({ currentWindow: true });

@@ -1,12 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
-import { createRoot } from "react-dom/client";
-import "../styles.css";
-import { saveTabsToSegment } from "../utils.js";
-import { getLastFocusedSaveableTabs } from "./chromeApi.js";
-import { Toast, useToastState } from "./Toast.jsx";
-import { getSaveErrorToast } from "./toastMessages.js";
+import { useEffect, useRef, useState } from "react";
+import { saveTabsToSegment } from "../../../utils.js";
+import { Toast, useToastState } from "../../components/common/Toast.jsx";
+import { getSaveErrorToast } from "../../lib/toastMessages.js";
+import { getLastFocusedSaveableTabs } from "../../services/chromeApi.js";
 
-function SaveApp() {
+export function SaveApp() {
   const [tabs, setTabs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [name, setName] = useState("");
@@ -86,9 +84,3 @@ function SaveApp() {
     </>
   );
 }
-
-createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-    <SaveApp />
-  </React.StrictMode>
-);

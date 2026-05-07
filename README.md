@@ -52,17 +52,22 @@ Load the generated `dist` folder in Chrome:
 ```text
 tab-nest/
 ├── src/
-│   ├── chromeApi.js      # Chrome API actions used by React views
-│   ├── icons.jsx         # Inline SVG icon components
-│   ├── popup.jsx         # Main extension popup
-│   ├── save.jsx          # Keyboard shortcut save window
-│   └── Toast.jsx         # Toast presentation and timer hook
-├── background.js         # Service worker for badge sync and shortcut window
-├── manifest.json         # Extension manifest
-├── popup.html            # Vite entry for the popup
-├── save.html             # Vite entry for the shortcut save page
-├── styles.css            # Shared styles
-├── utils.js              # Shared storage and tab utilities
-├── vite.config.js        # Multi-entry extension build
-└── icons/                # Extension icons
+│   ├── components/
+│   │   ├── common/        # Shared UI such as Toast
+│   │   └── icons/         # Inline SVG icon components
+│   ├── features/
+│   │   └── segments/      # Segment list, item, and empty state
+│   ├── lib/               # Small pure helpers
+│   ├── pages/
+│   │   ├── popup/         # Popup App.jsx, main.jsx, and page controls
+│   │   └── save/          # Shortcut save App.jsx and main.jsx
+│   └── services/          # Chrome API actions used by React views
+├── background.js          # Service worker for badge sync and shortcut window
+├── manifest.json          # Extension manifest
+├── popup.html             # Vite entry for the popup
+├── save.html              # Vite entry for the shortcut save page
+├── styles.css             # Shared styles
+├── utils.js               # Shared storage and tab utilities
+├── vite.config.js         # Multi-entry extension build
+└── icons/                 # Extension icons
 ```
