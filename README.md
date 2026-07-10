@@ -116,9 +116,8 @@ npm run build
 tab-nest/
 ├── src/
 │   ├── components/
-│   │   ├── common/        # Shared UI components (e.g., Toast)
-│   │   └── icons/         # Inline SVG icon components
-│   ├── features/
+│   │   ├── common/        # Shared UI components
+│   │   ├── icons/         # Inline SVG icon components
 │   │   └── segments/      # Segment list, item, and empty state
 │   ├── lib/               # Utility functions and toast helpers
 │   ├── pages/

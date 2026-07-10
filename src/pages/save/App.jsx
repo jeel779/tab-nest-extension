@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
 import { saveTabsToSegment } from "../../../utils.js";
-import { Toast, useToastState } from "../../components/common/Toast.jsx";
 import { getSaveErrorToast } from "../../lib/toastMessages.js";
 import { getLastFocusedSaveableTabs } from "../../services/chromeApi.js";
 
@@ -8,10 +8,7 @@ export function SaveApp() {
   const [tabs, setTabs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [name, setName] = useState("");
-  const [toast, setToast] = useState(null);
   const nameInputRef = useRef(null);
-
-  useToastState(toast, setToast);
 
   useEffect(() => {
     async function loadTabs() {
@@ -34,12 +31,20 @@ export function SaveApp() {
     const result = await saveTabsToSegment(trimmedName, tabs);
 
     if (!result.ok) {
-      setToast(getSaveErrorToast(result, trimmedName));
+      const err = getSaveErrorToast(result, trimmedName);
+      if (err.type === "warning") {
+        toast(err.message, {
+          icon: "⚠️",
+          style: { border: "1px solid var(--accent)" }
+        });
+      } else {
+        toast.error(err.message);
+      }
       if (result.reason === "empty-name") nameInputRef.current?.focus();
       return;
     }
 
-    setToast({ message: "Saved!", type: "success" });
+    toast.success("Saved!");
     window.setTimeout(() => window.close(), 900);
   }
 
@@ -80,7 +85,30 @@ export function SaveApp() {
           </div>
         </div>
       </div>
-      <Toast toast={toast} onDismiss={() => setToast(null)} />
+      <Toaster
+        position="bottom-center"
+        toastOptions={{
+          style: {
+            background: "var(--surface-2)",
+            color: "var(--text)",
+            border: "1px solid var(--border)",
+            fontSize: "12.5px",
+            borderRadius: "var(--radius-sm)",
+          },
+          success: {
+            iconTheme: {
+              primary: "var(--success)",
+              secondary: "var(--surface-2)",
+            },
+          },
+          error: {
+            iconTheme: {
+              primary: "var(--danger)",
+              secondary: "var(--surface-2)",
+            },
+          },
+        }}
+      />
     </>
   );
 }

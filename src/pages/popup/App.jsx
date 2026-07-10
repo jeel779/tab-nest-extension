@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
 import { getSegments, tabTitle, tabUrl } from "../../../utils.js";
-import { Toast, useToastState } from "../../components/common/Toast.jsx";
-import { SegmentList } from "../../features/segments/SegmentList.jsx";
+import { SegmentList } from "../../components/segments/SegmentList.jsx";
 import { getSaveErrorToast } from "../../lib/toastMessages.js";
 import {
   deleteSegment,
@@ -20,10 +20,7 @@ export function PopupApp() {
   const [query, setQuery] = useState("");
   const [expandedIds, setExpandedIds] = useState(() => new Set());
   const [editingId, setEditingId] = useState(null);
-  const [toast, setToast] = useState(null);
   const nameInputRef = useRef(null);
-
-  useToastState(toast, setToast);
 
   async function reloadSegments() {
     setSegments(await getSegments());
@@ -50,13 +47,21 @@ export function PopupApp() {
   async function handleSave() {
     const result = await saveCurrentTabsToSegment(name);
     if (!result.ok) {
-      setToast(getSaveErrorToast(result, name, "Failed to save segment."));
+      const err = getSaveErrorToast(result, name, "Failed to save segment.");
+      if (err.type === "warning") {
+        toast(err.message, {
+          icon: "⚠️",
+          style: { border: "1px solid var(--accent)" }
+        });
+      } else {
+        toast.error(err.message);
+      }
       return;
     }
 
     setName("");
     await reloadSegments();
-    setToast({ message: "Segment saved!", type: "success" });
+    toast.success("Segment saved!");
   }
 
   async function handleRename(segment, value) {
@@ -67,13 +72,16 @@ export function PopupApp() {
     const result = await renameSegment(segment.id, nextName);
     if (!result.ok) {
       if (result.reason === "duplicate") {
-        setToast({ message: `"${nextName}" already exists.`, type: "warning" });
+        toast(`"${nextName}" already exists.`, {
+          icon: "⚠️",
+          style: { border: "1px solid var(--accent)" }
+        });
       }
       return;
     }
 
     await reloadSegments();
-    setToast({ message: "Renamed!", type: "success" });
+    toast.success("Renamed!");
   }
 
   async function handleDelete(segmentId) {
@@ -81,15 +89,28 @@ export function PopupApp() {
     await reloadSegments();
 
     if (deleted) {
-      setToast({
-        message: "Segment deleted.",
-        type: "error",
-        undo: async () => {
-          await undoDeleteSegment(deleted);
-          await reloadSegments();
-          setToast({ message: "Delete undone.", type: "success" });
+      toast(
+        (t) => (
+          <span style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <span>Segment deleted.</span>
+            <button
+              className="toast-undo"
+              onClick={async () => {
+                await undoDeleteSegment(deleted);
+                await reloadSegments();
+                toast.success("Delete undone.");
+                toast.dismiss(t.id);
+              }}
+            >
+              Undo
+            </button>
+          </span>
+        ),
+        {
+          duration: 4000,
+          icon: "🗑️",
         }
-      });
+      );
     }
   }
 
@@ -107,7 +128,7 @@ export function PopupApp() {
     if (removeAfterOpen) {
       await deleteSegment(segmentId);
       await reloadSegments();
-      setToast({ message: "Opened and removed.", type: "success" });
+      toast.success("Opened and removed.");
     }
   }
 
@@ -132,7 +153,30 @@ export function PopupApp() {
           />
         </div>
       </div>
-      <Toast toast={toast} onDismiss={() => setToast(null)} />
+      <Toaster
+        position="bottom-center"
+        toastOptions={{
+          style: {
+            background: "var(--surface-2)",
+            color: "var(--text)",
+            border: "1px solid var(--border)",
+            fontSize: "12.5px",
+            borderRadius: "var(--radius-sm)",
+          },
+          success: {
+            iconTheme: {
+              primary: "var(--success)",
+              secondary: "var(--surface-2)",
+            },
+          },
+          error: {
+            iconTheme: {
+              primary: "var(--danger)",
+              secondary: "var(--surface-2)",
+            },
+          },
+        }}
+      />
     </>
   );
 }

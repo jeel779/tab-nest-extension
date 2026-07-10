@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
+import { ChevronDown, Pencil, Trash2 } from "lucide-react";
 import { domain, formatDate, tabTitle, tabUrl } from "../../../utils.js";
-import { DeleteIcon, ExpandIcon, RenameIcon } from "../../components/icons/Icons.jsx";
 import { getSegmentHue } from "../../lib/segmentColor.js";
 
 export function SegmentItem({
@@ -73,10 +73,10 @@ export function SegmentItem({
 
       <div className="segment-actions">
         <button className={`btn-icon btn-expand${expanded ? " expanded" : ""}`} type="button" title="Preview tabs" onClick={onExpand}>
-          <ExpandIcon />
+          <ChevronDown size={16} />
         </button>
         <button className="btn-icon btn-rename-icon" type="button" title="Rename segment" onClick={onStartRename}>
-          <RenameIcon />
+          <Pencil size={15} />
         </button>
         <button className="btn-open" type="button" title="Open in new window. Shift-click to open and remove" onClick={onOpen}>
           Open
@@ -85,7 +85,7 @@ export function SegmentItem({
           Here
         </button>
         <button className="btn-icon btn-delete-icon" type="button" title="Delete segment" onClick={onDelete}>
-          <DeleteIcon />
+          <Trash2 size={16} />
         </button>
       </div>
 

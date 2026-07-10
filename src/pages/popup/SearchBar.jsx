@@ -1,9 +1,9 @@
-import { SearchIcon } from "../../components/icons/Icons.jsx";
+import { Search, X } from "lucide-react";
 
 export function SearchBar({ query, onQueryChange }) {
   return (
     <div className="search-bar">
-      <SearchIcon className="search-icon" />
+      <Search size={16} className="search-icon" />
       <input
         type="text"
         placeholder="Search segments..."
@@ -20,7 +20,7 @@ export function SearchBar({ query, onQueryChange }) {
         aria-label="Clear search"
         onClick={() => onQueryChange("")}
       >
-        x
+        <X size={14} />
       </button>
     </div>
   );

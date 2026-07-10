@@ -68,7 +68,7 @@ export async function saveSegments(segments) {
         reject(new Error(chrome.runtime.lastError.message));
         return;
       }
-
+      
       resolve();
     });
   });
