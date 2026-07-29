@@ -6,20 +6,6 @@ Tab Nest helps you clear clutter and manage your browser's memory by "nesting" y
 
 ---
 
-## Table of Contents
-1. [Key Features](#features)
-2. [User Guide (How to Use)](#user-guide-how-to-use)
-    - [Saving Your Tabs](#1-saving-your-tabs)
-    - [Managing & Searching Segments](#2-managing--searching-segments)
-    - [Restoring Tabs](#3-restoring-tabs)
-    - [Keyboard Shortcuts](#keyboard-shortcuts)
-3. [Installation / Getting Started](#installation--getting-started)
-4. [Development & Building](#development--building)
-5. [Project Structure](#project-structure)
-6. [Tech Stack](#tech-stack)
-
----
-
 ## Features
 
 - **Save Current Window Tabs:** Group all active tabs in the current window into a named segment.
@@ -32,6 +18,27 @@ Tab Nest helps you clear clutter and manage your browser's memory by "nesting" y
 - **Inline Rename:** Double-click or click the edit icon to rename segments with built-in duplicate name prevention.
 - **Accidental Delete Protection:** Instantly restore any deleted segment using the "Undo" action in the toast popup.
 - **Sync Badge Count:** The extension icon displays a badge with the count of your saved segments in real time.
+
+---
+
+## Installation / Getting Started
+
+To install the extension locally in developer mode:
+
+1. Clone or download this repository.
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Build the production assets:
+   ```bash
+   npm run build
+   ```
+4. Load into Google Chrome:
+   - Open Chrome and navigate to `chrome://extensions`.
+   - Enable **Developer mode** (toggle in the top-right corner).
+   - Click **Load unpacked** (top-left button).
+   - Select the `dist` directory in your project folder.
 
 ---
 
@@ -73,27 +80,6 @@ You can customize the quick-save shortcut by visiting:
 
 ---
 
-## Installation / Getting Started
-
-To install the extension locally in developer mode:
-
-1. Clone or download this repository.
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. Build the production assets:
-   ```bash
-   npm run build
-   ```
-4. Load into Google Chrome:
-   - Open Chrome and navigate to `chrome://extensions`.
-   - Enable **Developer mode** (toggle in the top-right corner).
-   - Click **Load unpacked** (top-left button).
-   - Select the `dist` directory in your project folder.
-
----
-
 ## Development & Building
 
 ### Run Vite Dev Server
@@ -107,7 +93,6 @@ To re-build the extension after making changes to background workers or utility 
 ```bash
 npm run build
 ```
-
 ---
 
 ## Project Structure
