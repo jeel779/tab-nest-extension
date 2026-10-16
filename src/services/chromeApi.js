@@ -37,10 +37,47 @@ export async function restoreSegment(segmentId, inCurrentWindow = false) {
   const segment = segments.find(item => item.id === segmentId);
   if (!segment || segment.tabs.length === 0) return;
 
-  const urls = segment.tabs.map(tabUrl);
+  const mode = inCurrentWindow ? "current" : "window";
+  let windowId = null;
 
   if (inCurrentWindow) {
-    for (const url of urls) await chrome.tabs.create({ url });
+    try {
+      windowId = (await chrome.windows.getCurrent()).id;
+    } catch {
+      windowId = null;
+    }
+  }
+
+  try {
+    // Hand the work to the background service worker: the popup closes as soon
+    // as a new tab/window takes focus, which would cancel creation here.
+    const response = await chrome.runtime.sendMessage({
+      type: "RESTORE_SEGMENT",
+      segmentId,
+      mode,
+      windowId
+    });
+    if (response?.ok) return;
+  } catch (error) {
+    console.warn("Tab Nest: background restore unavailable, falling back", error);
+  }
+
+  await restoreSegmentDirectly(segment, inCurrentWindow, windowId);
+}
+
+async function restoreSegmentDirectly(segment, inCurrentWindow, windowId) {
+  const urls = segment.tabs.map(tabUrl).filter(Boolean);
+  if (!urls.length) return;
+
+  if (inCurrentWindow) {
+    let lastTabId = null;
+    for (const url of urls) {
+      const tab = await chrome.tabs.create({ url, windowId: windowId ?? undefined, active: false });
+      lastTabId = tab.id;
+    }
+    if (lastTabId != null) {
+      await chrome.tabs.update(lastTabId, { active: true });
+    }
   } else {
     await chrome.windows.create({ url: urls, focused: true });
   }
